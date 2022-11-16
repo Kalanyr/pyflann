@@ -24,9 +24,33 @@
 #(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 #THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from .index import *
-from .io.dataset import load, save
-try:
-    from .io.hdf5_dataset import load_range
-except:
-    pass
+from __future__ import with_statement
+
+from pyflann.exceptions import FLANNException
+import numpy
+
+
+def check(filename):
+    f = open(filename,"r")
+    header = f.read(6)
+    if header[1:6]=="NUMPY": return True
+    return False
+        
+
+def save(dataset, filename):
+    if not isinstance(dataset,numpy.ndarray):
+        raise FLANNException("Dataset must be in numpy format")
+    try:
+        numpy.save(filename, dataset)
+    except:
+        raise FLANNException("Format not supported. You need at least numpy version 1.1")
+
+
+def load(filename, rows = -1, cols = -1, dtype = numpy.float32):
+    try:
+        tmp = numpy.save
+    except:
+        raise FLANNException("Format not supported. You need at least numpy version 1.1")
+    data = numpy.load(filename)
+    return data
+    
